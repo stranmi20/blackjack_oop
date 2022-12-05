@@ -10,7 +10,7 @@ namespace blackjack_oop
     {
         public string Nick { get; set; }
         public List<Array> Karty { get; set; }
-        private int Penize { get; set; }
+        public int Penize { get; set; }
 
         public int Sazka { get; set; }
 
