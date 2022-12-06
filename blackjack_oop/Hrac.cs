@@ -30,16 +30,10 @@ namespace blackjack_oop
 
         public bool KontrolaSazky()
         {
-            if (Sazka < 0)
+            if (Sazka <= 0)
             {
                 return false;
             } else if (Sazka > Penize)
-            {
-                return false;
-            } else if (String.IsNullOrEmpty(Sazka.ToString()))
-            {
-                return false;
-            } else if (Regex.IsMatch(Sazka.ToString(), @"^[a-zA-Z]+$"))
             {
                 return false;
             } else

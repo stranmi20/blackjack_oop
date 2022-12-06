@@ -14,7 +14,8 @@ namespace blackjack_oop
 
         public void VypisKartu()
         {
-            Console.WriteLine(this.Hodnota + this.Barva);
+            Console.WriteLine(Hodnota + Barva);
         }
+
     }
 }

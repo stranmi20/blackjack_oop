@@ -8,15 +8,19 @@ namespace blackjack_oop
 {
     internal class Balicek
     {
-        public List<Array> Karty { get; set; }
+        public List<string> Karty { get; set; }
 
         public void Vypis_pocet_karet()
         {
             Console.WriteLine("Pocet karet v balicku: " + Karty.Count);
         }
 
-        private static Random rng = new Random();
+        public void PridaniKartyDoBaliku(string hodnota,string barva)
+        {
+            Karty.Add(hodnota + barva);
+        }
 
+        private static Random rng = new Random();
         public static void Shuffle<T>(IList<T> Karty)
         {
             int n = Karty.Count;
