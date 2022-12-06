@@ -38,9 +38,25 @@ namespace blackjack_oop
                             }
                             else
                             {
+                                Console.Write("Vsadte sazku: ");
+                                Int32.TryParse(Console.ReadLine(), out int sazka);
+
                                 Hrac hrac = new Hrac();
                                 hrac.Nick = nick;
                                 hrac.Penize = penize;
+                                hrac.Sazka = sazka;
+
+                                bool kontrola_sazky = hrac.KontrolaSazky();
+                                if (kontrola_sazky == false)
+                                {
+                                    Console.WriteLine("Zadejte platnou sazku");
+                                }
+                                else
+                                {
+                                    penize = hrac.OdectiPenize();
+                                    Console.WriteLine(penize);
+                                }
+                                
                             }
 
                         }
