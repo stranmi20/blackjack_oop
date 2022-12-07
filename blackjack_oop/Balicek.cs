@@ -8,30 +8,37 @@ namespace blackjack_oop
 {
     internal class Balicek
     {
-        protected internal List<string> Karty { get; set; }
-
-        public void Vypis_pocet_karet()
+        
+        public List<string> Karty { get; set; }
+        public List<string> VytvorBalicek()
         {
-            Console.WriteLine("Pocet karet v balicku: " + Karty.Count);
-        }
+            string[] hodnoty = new string[] { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
+            string[] barva = new string[] { "♥", "♦", "♠", "♣" };
 
-        public void PridaniKartyDoBaliku(string hodnota,string barva)
-        {
-            string karta = hodnota + ", " + barva;
-            Karty.Add(karta);
+            for (int i = 0; i < 4; i++)
+            {
+                foreach (string hod in hodnoty)
+                {
+                    foreach (string bar in barva)
+                    {
+                        string hod_bar = hod + bar;
+                        Karty.Add(hod_bar);
+                    }
+                }
+            }
+            return Karty;
         }
 
         private static Random rng = new Random();
-        public static void Shuffle<T>(IList<T> Karty)
+
+        public void Shuffle(List<string> balik)
         {
-            int n = Karty.Count;
-            while (n > 1)
+            for (int n = balik.Count - 1; n > 0; --n)
             {
-                n--;
                 int k = rng.Next(n + 1);
-                T value = Karty[k];
-                Karty[k] = Karty[n];
-                Karty[n] = value;
+                int temp = balik[n];
+                balik[n] = balik[k];
+                balik[k] = temp;
             }
         }
     }

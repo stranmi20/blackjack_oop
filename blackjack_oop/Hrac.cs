@@ -10,7 +10,7 @@ namespace blackjack_oop
     internal class Hrac
     {
         public string Nick { get; set; }
-        public List<Array> Karty { get; set; }
+        public List<string[]> Karty { get; set; }
         public int Penize { get; set; }
 
         public int Sazka { get; set; }

@@ -11,19 +11,6 @@ namespace blackjack_oop
     {
         public Hrac NewGame()
         {
-            /* Vytvareni balicku -- udelat metodu
-            List<string> karty = new List<string>();
-
-            Balicek balicek = new Balicek();
-            balicek.Karty = karty;
-            Karta karta = new Karta();
-
-            karta.Hodnota = "A";
-            karta.Barva = "Srdcova";
-
-            balicek.PridaniKartyDoBaliku(karta.Hodnota, karta.Barva);
-            */
-
             bool hra = true;
 
             while (hra)
@@ -51,6 +38,10 @@ namespace blackjack_oop
 
         public void NewRound(Hrac hrac)
         {
+            List<string> karty = new List<string>();
+
+            Balicek balicek = new Balicek();
+            balicek.Karty = karty;
             int penize = 1000;
             bool round = true;
             while (round)
@@ -71,7 +62,10 @@ namespace blackjack_oop
                     Console.WriteLine(hrac.Nick);
                     penize = hrac.OdectiPenize();
                     Console.WriteLine(penize);
-                    //balicek.Vypis_pocet_karet();
+                    List<string> balik = new List<string>();
+                    balik = balicek.VytvorBalicek();
+                    balicek.Shuffle(balik);
+
                 }
             }
            

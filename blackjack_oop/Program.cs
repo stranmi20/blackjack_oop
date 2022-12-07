@@ -24,30 +24,6 @@ while (menu)
             Hra hra = new Hra();
             Hrac hrac = hra.NewGame();
             hra.NewRound(hrac);
-            /*
-            while (hra)
-            {
-                Console.Write("Vsadte sazku: ");
-                Int32.TryParse(Console.ReadLine(), out int sazka);
-
-                Hrac hrac = new Hrac();
-                hrac.Nick = nick;
-                hrac.Penize = penize;
-                hrac.Sazka = sazka;
-
-                bool kontrola_sazky = hrac.KontrolaSazky();
-                if (kontrola_sazky == false)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Zadejte platnou sazku");
-                }
-                else
-                {
-                    penize = hrac.OdectiPenize();
-                    balicek.Vypis_pocet_karet();
-                }
-            }
-            */
             break;
         case '2':
             menu = false;
