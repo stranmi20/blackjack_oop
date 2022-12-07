@@ -12,9 +12,9 @@ namespace blackjack_oop
 
         public string Barva { get; set; }
 
-        public void VypisKartu()
+        public void VytvorKarty()
         {
-            Console.WriteLine(Hodnota + Barva);
+
         }
 
     }

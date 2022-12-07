@@ -28,19 +28,7 @@ namespace blackjack_oop
             return Penize - Sazka;
         }
 
-        public bool KontrolaSazky()
-        {
-            if (Sazka <= 0)
-            {
-                return false;
-            } else if (Sazka > Penize)
-            {
-                return false;
-            } else
-            {
-                return true;
-            }
-        }
+        
 
         
 

@@ -8,7 +8,7 @@ namespace blackjack_oop
 {
     internal class Balicek
     {
-        public List<string> Karty { get; set; }
+        protected internal List<string> Karty { get; set; }
 
         public void Vypis_pocet_karet()
         {
@@ -17,7 +17,8 @@ namespace blackjack_oop
 
         public void PridaniKartyDoBaliku(string hodnota,string barva)
         {
-            Karty.Add(hodnota + barva);
+            string karta = hodnota + ", " + barva;
+            Karty.Add(karta);
         }
 
         private static Random rng = new Random();

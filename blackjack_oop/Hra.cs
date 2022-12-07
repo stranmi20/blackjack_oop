@@ -1,91 +1,104 @@
-﻿using blackjack_oop;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
-Balicek balicek = new Balicek();
-
-Karta karta = new Karta();
-karta.Hodnota = "A";
-karta.Barva = "Srdcova";
-
-balicek.PridaniKartyDoBaliku(karta.Hodnota, karta.Barva);
-
-int penize = 1000;
-bool hra = true;
-int moznost = 5;
-bool menu = true;
-while (menu)
+namespace blackjack_oop
 {
-    Console.WriteLine("************BLACKJACK****************");
-    Console.WriteLine("MENU");
-    Console.WriteLine("1 - Hra");
-    Console.WriteLine("2 - zebricek");
-    Console.WriteLine("3 - Pravidla");
-    Console.WriteLine("4 - Konec");
-    Console.WriteLine("Vyberte moznost");
-    Console.Write(">>");
-    moznost = Console.ReadKey().KeyChar;
-    switch (moznost)
+    internal class Hra
     {
-        case '1':
-            menu = false;
-            Console.Clear();
+        public Hrac NewGame()
+        {
+            /* Vytvareni balicku -- udelat metodu
+            List<string> karty = new List<string>();
+
+            Balicek balicek = new Balicek();
+            balicek.Karty = karty;
+            Karta karta = new Karta();
+
+            karta.Hodnota = "A";
+            karta.Barva = "Srdcova";
+
+            balicek.PridaniKartyDoBaliku(karta.Hodnota, karta.Barva);
+            */
+
+            bool hra = true;
+
             while (hra)
             {
                 Console.Write("Napiste vas nick: ");
                 string nick = Console.ReadLine();
-                if (nick.Length <= 3)
+                bool nick_check = KontrolaNicku(nick);
+                if (nick_check == false)
                 {
                     Console.Clear();
                     Console.WriteLine("Nick musi byt delsi nez 3 znaky!");
                 }
                 else
                 {
-                    Console.Write("Vsadte sazku: ");
-                    Int32.TryParse(Console.ReadLine(), out int sazka);
-
                     Hrac hrac = new Hrac();
                     hrac.Nick = nick;
+                    
+                    hra = false;
+                    return hrac;
+                }
+            }
+
+            return null;
+        }
+
+        public void NewRound(Hrac hrac)
+        {
+            int penize = 1000;
+            bool round = true;
+            while (round)
+            {
+                Console.Write("Vsadte sazku: ");
+                Int32.TryParse(Console.ReadLine(), out int sazka);
+                bool sazka_check = KontrolaSazky(sazka, penize);
+                if (sazka_check == false)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Zadejte platnou sazku");
+                }
+                else
+                {
+
                     hrac.Penize = penize;
                     hrac.Sazka = sazka;
-
-                    bool kontrola_sazky = hrac.KontrolaSazky();
-                    if (kontrola_sazky == false)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Zadejte platnou sazku");
-                    }
-                    else
-                    {
-                        penize = hrac.OdectiPenize();
-                        balicek.Vypis_pocet_karet();
-                    }
-
+                    Console.WriteLine(hrac.Nick);
+                    penize = hrac.OdectiPenize();
+                    Console.WriteLine(penize);
+                    //balicek.Vypis_pocet_karet();
                 }
-
             }
-            break;
-        case '2':
-            menu = false;
-            Console.Clear();
-            Console.WriteLine("L");
-            Console.ReadLine();
-            break;
-        case '3':
-            menu = false;
-            Console.Clear();
-            Console.WriteLine("Im racist");
-            Console.ReadLine();
-            break;
-        case '4':
-            menu = false;
-            Console.Clear();
-            Console.WriteLine("kys");
-            Console.ReadLine();
-            break;
-        default:
-            Console.Clear();
-            continue;
+           
+        }
+
+        public bool KontrolaNicku(string nick)
+        {
+            if (nick.Length <= 3)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool KontrolaSazky(int sazka, int penize)
+        {
+            if (sazka <= 0)
+            {
+                return false;
+            }
+            if (sazka > penize)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
-}            
+}
