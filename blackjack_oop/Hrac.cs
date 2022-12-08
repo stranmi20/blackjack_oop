@@ -22,6 +22,16 @@ namespace blackjack_oop
         {
             return Penize - Sazka;
         }
+
+        public int VyhrajPrachy()
+        {
+            return Penize + Sazka + Sazka;
+        }
+
+        public int VratPrachy()
+        {
+            return Penize + Sazka;
+        }
         public void VypisKarty()
         {
             Console.Write("Vase Karty: ");

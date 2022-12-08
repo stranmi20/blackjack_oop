@@ -25,5 +25,14 @@ namespace blackjack_oop
             }
             return Hodnota_karet;
         }
+
+        public void VypisKartyDealera()
+        {
+            Console.Write("Dealerovi Karty: ");
+            foreach (string k in Karty_v_ruce)
+            {
+                Console.Write(k + " ");
+            }
+        }
     }
 }
