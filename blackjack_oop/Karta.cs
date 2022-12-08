@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -9,11 +10,31 @@ namespace blackjack_oop
 {
     internal class Karta
     {
-        private List<string> Hodnota { get; set; }
+        public char Hodnota { get; set; }
 
-        private List<string> Barva { get; set; }
+        public char Barva { get; set; }
 
-        
-
+        public int VratHodnotu(int hodnota_karet)
+        {
+            if (Hodnota == '1' || Hodnota == 'J' || Hodnota == 'K' || Hodnota == 'Q')
+            {
+                return 10;
+            } else if(Hodnota == 'A')
+            {
+                if(hodnota_karet > 11)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return 11;
+                }
+            }
+            else
+            {
+                return CharUnicodeInfo.GetDecimalDigitValue(Hodnota);
+            }
+           
+        }
     }
 }

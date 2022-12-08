@@ -28,6 +28,7 @@ namespace blackjack_oop
                 }
             }
             return Karty;
+            
         }
 
         private static Random rng = new Random();
@@ -36,6 +37,18 @@ namespace blackjack_oop
         {
             Karty = Karty.OrderBy(_ => rng.Next()).ToList();
             return Karty;
+        }
+
+        public void Pridani_karty_k_hraci(Hrac hrac)
+        {
+            hrac.Karty_v_ruce.Add(Karty[0]);
+            Karty.Remove(Karty[0]);
+        }
+
+        public void Pridani_karty_k_dealerovi(Dealer dealer)
+        {
+            dealer.Karty_v_ruce.Add(Karty[0]);
+            Karty.Remove(Karty[0]);
         }
     }
 }
