@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace blackjack_oop
 {
@@ -31,15 +32,10 @@ namespace blackjack_oop
 
         private static Random rng = new Random();
 
-        public void Shuffle(List<string> balik)
+        public List<string> Shuffle()
         {
-            for (int n = balik.Count - 1; n > 0; --n)
-            {
-                int k = rng.Next(n + 1);
-                int temp = balik[n];
-                balik[n] = balik[k];
-                balik[k] = temp;
-            }
+            Karty = Karty.OrderBy(_ => rng.Next()).ToList();
+            return Karty;
         }
     }
 }

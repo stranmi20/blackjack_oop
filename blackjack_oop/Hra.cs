@@ -62,10 +62,8 @@ namespace blackjack_oop
                     Console.WriteLine(hrac.Nick);
                     penize = hrac.OdectiPenize();
                     Console.WriteLine(penize);
-                    List<string> balik = new List<string>();
-                    balik = balicek.VytvorBalicek();
-                    balicek.Shuffle(balik);
-
+                    balicek.VytvorBalicek();
+                    balicek.Karty = balicek.Shuffle();
                 }
             }
            
