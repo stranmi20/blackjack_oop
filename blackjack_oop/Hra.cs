@@ -38,7 +38,7 @@ namespace blackjack_oop
             return null;
         }
 
-        public void NewRound(Hrac hrac)
+        public void NewRound(Hrac hrac, int penize)
         {
             List<string> karty = new List<string>();
             List<string> hrac_karty_v_ruce = new List<string>();
@@ -47,13 +47,11 @@ namespace blackjack_oop
             Balicek balicek = new Balicek();
             balicek.Karty = karty;
             hrac.Karty_v_ruce = hrac_karty_v_ruce;
-            int penize = 1000;
-            int hodnota_karet_hrace = 0;
-            int hodnota_karet_dealera = 0;
+            
             bool round = true;
             while (round)
             {
-                Console.Write("Vsadte sazku: ");
+                Console.WriteLine("Vsadte sazku >> ");
                 Int32.TryParse(Console.ReadLine(), out int sazka);
                 bool sazka_check = KontrolaSazky(sazka, penize);
                 if (sazka_check == false)
@@ -67,7 +65,7 @@ namespace blackjack_oop
                     hrac.Penize = penize;
                     hrac.Sazka = sazka;
 
-                    penize = hrac.OdectiPenize();
+                    hrac.Penize = hrac.OdectiPenize();
 
                     balicek.VytvorBalicek();
                     balicek.Karty = balicek.Shuffle();
@@ -76,7 +74,7 @@ namespace blackjack_oop
                     balicek.Pridani_karty_k_hraci(hrac);
 
                     hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
-                    
+
                     Dealer dealer = new Dealer();
                     dealer.Karty_v_ruce = dealer_karty_v_ruce;
 
@@ -85,114 +83,90 @@ namespace blackjack_oop
 
                     dealer.Hodnota_karet = dealer.VratHodnutuKaretVRuce();
 
-                    VypisHry(hrac, penize, dealer);
+                    VypisHry(hrac, dealer);
 
                     char dalsi_karta;
-                    bool konec = true;
-                    bool dalsi_karta_bool_hrac = true;
-                    bool dalsi_karta_bool_dealer = true;
+                    bool prohra_hrac_nad_21 = false;
                     do
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Chcete Dalsi Kartu? (a/n)");
+                        Console.Write("Chcete Dalsi Kartu? (a/n) >> ");
                         dalsi_karta = Console.ReadKey().KeyChar;
                         if (dalsi_karta == 'a')
                         {
                             Console.Clear();
                             balicek.Pridani_karty_k_hraci(hrac);
-                            VypisHry(hrac, penize, dealer);
-                            dalsi_karta_bool_hrac = KontrolaHodnotyHrac(hrac);
-                            if (!dalsi_karta_bool_hrac)
+                            VypisHry(hrac, dealer);
+                            if (hrac.Hodnota_karet > 21)
                             {
-                                dalsi_karta = 'n';
+                                prohra_hrac_nad_21 = true;
+                                break;
                             }
                         } else if (dalsi_karta == 'n')
                         {
-                            Console.Clear();
-                            konec = false;
-                            Console.WriteLine("Prohrali Jste!");
-                            Console.WriteLine("Mate Vetsi Hodnotu Karet Nez 21!");
-                            VypisPoHre(hrac, penize, dealer);
-                            break;
+                            dalsi_karta = 'n';
                         }
                         else
                         {
                             dalsi_karta = 'a';
                         }
                     } while (dalsi_karta == 'a');
-                    while (!konec)
+
+                    
+
+                    if (prohra_hrac_nad_21 == true)
                     {
-                        if (dalsi_karta_bool_hrac)
+                        Console.Clear();
+                        Console.WriteLine("Prohrali Jste!");
+                        Console.WriteLine("Hodnota Vasich Karet Je Nad 21");
+                        VypisPoHre(hrac, dealer);
+                        hrac.Sazka = 0;
+                        round = false;
+                    }
+
+                    while (dealer.Hodnota_karet < 17)
+                    {
+                        balicek.Pridani_karty_k_dealerovi(dealer);
+                        dealer.Hodnota_karet = dealer.VratHodnutuKaretVRuce();
+                    }
+
+                    if (dealer.Hodnota_karet < 21 && prohra_hrac_nad_21 == false)
+                    {
+                        if (hrac.Hodnota_karet > dealer.Hodnota_karet)
+                        {
+                            Console.WriteLine("Vyhrali Jste!");
+                            Console.WriteLine("Mate Vetsi Hodnotu Karet Nez Dealer!");                                                        
+                            hrac.Penize = hrac.VyhrajPrachy();
+                            VypisPoHre(hrac, dealer);
+                            round = false;
+                        }
+                        if (hrac.Hodnota_karet == dealer.Hodnota_karet)
                         {
                             Console.Clear();
-                            VypisHry(hrac, penize, dealer);
-                            konec = true;
+                            Console.WriteLine("Remiza!");
+                            Console.WriteLine("Mate Stejnou Hodnotu Karet Jak Dealer!");
+                            hrac.Penize = hrac.VratPrachy();
+                            VypisPoHre(hrac, dealer);                    
+                            round = false;
                         }
-
-                        if (dalsi_karta_bool_dealer)
+                        if (hrac.Hodnota_karet < dealer.Hodnota_karet)
                         {
-                            if (dealer.Hodnota_karet < 17)
-                            {
-                                balicek.Pridani_karty_k_dealerovi(dealer);
-                                dalsi_karta_bool_dealer = KontrolaHodnotyDealer(dealer);
-                            } else
-                            {
-                                if (dealer.Hodnota_karet > 21)
-                                {
-                                    konec = true;
-                                    Console.WriteLine("Vyhrali Jste!");
-                                    Console.WriteLine("Dealer Ma Nad 21!");
-                                    VypisPoHre(hrac, penize, dealer);
-                                    hrac.Penize = hrac.VyhrajPrachy();
-                                }
-                                else
-                                {
-                                    dalsi_karta_bool_dealer = false;
-                                }                              
-                            }
+                            Console.Clear();
+                            Console.WriteLine("Prohrali jste!");
+                            Console.WriteLine("Mate Mensi Hodnotu Karet Nez Dealer!");                              
+                            VypisPoHre(hrac, dealer);
+                            round = false;
                         }
-
-                        if(dealer.Hodnota_karet < 21)
-                        {
-                            if (hrac.Hodnota_karet > dealer.Hodnota_karet)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Vyhrali Jste!");
-                                Console.WriteLine("Mate Vetsi Hodnotu Karet Nez Dealer!");
-                                konec = true;
-                                VypisPoHre(hrac, penize, dealer);
-                                hrac.Penize = hrac.VyhrajPrachy();
-                                hrac.Sazka = 0;
-                            }
-                            if (hrac.Hodnota_karet == dealer.Hodnota_karet)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Remiza!");
-                                Console.WriteLine("Mate Stejnou Hodnotu Karet Jak Dealer!");
-                                konec = true;
-                                VypisPoHre(hrac, penize, dealer);
-                                hrac.Penize = hrac.VratPrachy();
-                            }
-                            if (hrac.Hodnota_karet < dealer.Hodnota_karet)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Prohrali jste!");
-                                Console.WriteLine("Mate Mensi Hodnotu Karet Nez Dealer!");
-                                konec = true;
-                                VypisPoHre(hrac, penize, dealer);
-                            }
-                        } else
-                        {
-                            konec = true;
-                            Console.WriteLine("Vyhrali Jste!");
-                            Console.WriteLine("Dealer Ma Nad 21!");
-                            VypisPoHre(hrac, penize, dealer);
-                            hrac.Penize = hrac.VyhrajPrachy();
-                        }
-
-                        
                     }
-                    
+                    if(dealer.Hodnota_karet > 21 && round != false)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Vyhrali Jste!");
+                        Console.WriteLine("Dealer Ma Nad 21!");
+                        VypisPoHre(hrac, dealer);
+                        hrac.Penize = hrac.VyhrajPrachy();
+                        round = false;
+                    }
                 }
             }
            
@@ -222,55 +196,9 @@ namespace blackjack_oop
             return true;
         }
 
-        public bool KontrolaHodnotyHrac(Hrac hrac)
+        public void VypisHry(Hrac hrac, Dealer dealer)
         {
-            if (hrac.Hodnota_karet > 21)
-            {
-                foreach (string c in hrac.Karty_v_ruce)
-                {
-                    if (c[0] == 'A')
-                    {
-                        hrac.Hodnota_karet =- 10;
-                        if (hrac.Hodnota_karet > 21)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                        
-                    }
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public bool KontrolaHodnotyDealer(Dealer dealer)
-        {
-            if (dealer.Hodnota_karet > 21)
-            {
-                foreach (string c in dealer.Karty_v_ruce)
-                {
-                    if (c[0] == 'A');
-                    {
-                        dealer.Hodnota_karet = -10;
-                        if (dealer.Hodnota_karet > 21)
-                        {
-                            return false;
-                        }
-                        return true;
-                    }
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public void VypisHry(Hrac hrac, int penize, Dealer dealer)
-        {
-            Console.WriteLine("Pocet penez: " + penize);
+            Console.WriteLine("Pocet penez: " + hrac.Penize);
             hrac.VypisKarty();
             Console.WriteLine();
             hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
@@ -280,9 +208,9 @@ namespace blackjack_oop
             Console.WriteLine();
         }
 
-        public void VypisPoHre(Hrac hrac, int penize, Dealer dealer)
+        public void VypisPoHre(Hrac hrac, Dealer dealer)
         {
-            Console.WriteLine("Pocet penez: " + penize);
+            Console.WriteLine("Pocet penez: " + hrac.Penize);
             hrac.VypisKarty();
             Console.WriteLine();
             hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();

@@ -15,13 +15,20 @@ namespace blackjack_oop
         public int VratHodnutuKaretVRuce()
         {
             Hodnota_karet = 0;
-            foreach (string a in Karty_v_ruce)
+            foreach (string k in Karty_v_ruce)
             {
-                Karta karta_dealera = new Karta();
-                karta_dealera.Hodnota = a[0];
-                karta_dealera.Barva = a[1];
-                int hodnota_dealera = karta_dealera.VratHodnotu(Hodnota_karet);
-                Hodnota_karet += hodnota_dealera;
+                Karta karta_hrace = new Karta();
+                karta_hrace.Hodnota = k[0];
+                karta_hrace.Barva = k[1];
+                int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
+                Hodnota_karet += hodnota;
+                if (k[0] == 'A')
+                {
+                    if (Hodnota_karet > 21)
+                    {
+                        Hodnota_karet -= 10;
+                    }
+                }
             }
             return Hodnota_karet;
         }

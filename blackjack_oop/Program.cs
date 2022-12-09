@@ -19,11 +19,32 @@ while (menu)
     switch (moznost)
     {
         case '1':
+            int penize = 1000;
             menu = false;
             Console.Clear();
             Hra hra = new Hra();
             Hrac hrac = hra.NewGame();
-            hra.NewRound(hrac);
+            hra.NewRound(hrac, penize);
+            bool dalsi_kolo = true;
+            while (dalsi_kolo)
+            {
+                Console.Write("Chcete hrat dalsi kolo? (a/n) >> ");
+                char odpoved = Console.ReadKey().KeyChar;
+                if (odpoved == 'a')
+                {
+                    hra.NewRound(hrac, hrac.Penize);
+                }
+                else if (odpoved == 'n')
+                {
+                    
+                    menu = true;
+                    dalsi_kolo = false;
+                }
+                else
+                {
+                    continue;
+                }
+            }   
             break;
         case '2':
             menu = false;

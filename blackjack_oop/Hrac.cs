@@ -25,7 +25,7 @@ namespace blackjack_oop
 
         public int VyhrajPrachy()
         {
-            return Penize + Sazka + Sazka;
+            return Penize + Sazka * 2;
         }
 
         public int VratPrachy()
@@ -51,6 +51,13 @@ namespace blackjack_oop
                 karta_hrace.Barva = k[1];
                 int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
                 Hodnota_karet += hodnota;
+                if (k[0] == 'A')
+                {
+                    if (Hodnota_karet > 21)
+                    {
+                        Hodnota_karet -= 10;
+                    }
+                }
             }
             return Hodnota_karet;
         }

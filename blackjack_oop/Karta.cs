@@ -21,14 +21,7 @@ namespace blackjack_oop
                 return 10;
             } else if(Hodnota == 'A')
             {
-                if(hodnota_karet > 11)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 11;
-                }
+                return 11;
             }
             else
             {
