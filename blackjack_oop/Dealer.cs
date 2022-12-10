@@ -41,5 +41,20 @@ namespace blackjack_oop
                 Console.Write(k + " ");
             }
         }
+
+        public bool KontrolaBlackjacku()
+        {
+            if (Hodnota_karet == 21)
+            {
+                foreach (string k in Karty_v_ruce)
+                {
+                    if (k[0] == 'A')
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

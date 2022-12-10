@@ -45,7 +45,6 @@ namespace blackjack_oop
             Karty.Remove(Karty[0]);
         }
 
-
         public void Pridani_karty_k_dealerovi(Dealer dealer)
         {
             dealer.Karty_v_ruce.Add(Karty[0]);

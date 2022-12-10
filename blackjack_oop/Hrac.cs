@@ -61,5 +61,20 @@ namespace blackjack_oop
             }
             return Hodnota_karet;
         }
+
+        public bool KontrolaBlackjacku()
+        {
+            if (Hodnota_karet == 21)
+            {
+                foreach (string k in Karty_v_ruce)
+                {
+                    if (k[0] == 'A')
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

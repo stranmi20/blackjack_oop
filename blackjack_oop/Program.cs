@@ -7,8 +7,8 @@ int moznost;
 bool menu = true;
 while (menu)
 {
+    Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine("************BLACKJACK****************");
-    Console.WriteLine("MENU");
     Console.WriteLine("1 - Hra");
     Console.WriteLine("2 - zebricek");
     Console.WriteLine("3 - Pravidla");
@@ -28,7 +28,10 @@ while (menu)
             bool dalsi_kolo = true;
             while (dalsi_kolo)
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine();
                 Console.Write("Chcete hrat dalsi kolo? (a/n) >> ");
+                
                 char odpoved = Console.ReadKey().KeyChar;
                 if (odpoved == 'a')
                 {
@@ -44,7 +47,8 @@ while (menu)
                 {
                     continue;
                 }
-            }   
+            }
+            Console.ResetColor();
             break;
         case '2':
             menu = false;
