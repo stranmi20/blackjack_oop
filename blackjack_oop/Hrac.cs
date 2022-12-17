@@ -10,6 +10,7 @@ namespace blackjack_oop
 {
     internal class Hrac
     {
+        //Nastaveni Vlastnosti Hrace
         public string Nick { get; set; }
         public List<string> Karty_v_ruce { get; set; }
         public int Penize { get; set; }
@@ -18,20 +19,25 @@ namespace blackjack_oop
 
         public int Hodnota_karet { get; set; }
 
+        //Metoda Pro Odecteni Penez
         public int OdectiPenize()
         {
             return Penize - Sazka;
         }
 
+        //Metoda Pro Vyhru Penez
         public int VyhrajPrachy()
         {
             return Penize + Sazka * 2;
         }
 
+        //Metoda Pro Vraceni Vkladu
         public int VratPrachy()
         {
             return Penize + Sazka;
         }
+
+        //Metoda Pro Vypis Karet V Ruce
         public void VypisKarty()
         {
             Console.Write("Vase Karty: ");
@@ -41,6 +47,7 @@ namespace blackjack_oop
             }
         }
 
+        //Metoda Pro Vraceni Hodnoty Co Ma V Ruce
         public int VratHodnotuKaretVRuce()
         {
             Hodnota_karet = 0;
@@ -51,6 +58,7 @@ namespace blackjack_oop
                 karta_hrace.Barva = k[1];
                 int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
                 Hodnota_karet += hodnota;
+                //Pokud Ma ESO
                 if (k[0] == 'A')
                 {
                     if (Hodnota_karet > 21)
@@ -62,6 +70,7 @@ namespace blackjack_oop
             return Hodnota_karet;
         }
 
+        //Metoda Pro Kontrolu Jestli Nema Blackjack
         public bool KontrolaBlackjacku()
         {
             if (Hodnota_karet == 21)

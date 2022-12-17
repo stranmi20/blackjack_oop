@@ -10,10 +10,13 @@ namespace blackjack_oop
 {
     internal class Karta
     {
+        
+        //Nastaveni Vlastnosti Karty
         public char Hodnota { get; set; }
 
         public char Barva { get; set; }
 
+        //Metoda Pro Vraceni Hodnoty Karty
         public int VratHodnotu(int hodnota_karet)
         {
             if (Hodnota == '1' || Hodnota == 'J' || Hodnota == 'K' || Hodnota == 'Q')
@@ -25,6 +28,7 @@ namespace blackjack_oop
             }
             else
             {
+                //Prevedeni z char na int
                 return CharUnicodeInfo.GetDecimalDigitValue(Hodnota);
             }
            

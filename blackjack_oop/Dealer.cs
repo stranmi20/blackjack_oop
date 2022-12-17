@@ -8,10 +8,12 @@ namespace blackjack_oop
 {
     internal class Dealer
     {
+        //Nastaveni Vlastnosti Dealera
         public List<string> Karty_v_ruce { get; set; }
 
         public int Hodnota_karet { get; set; }
 
+        //Metoda Pro Vraceni Hodnoty Karet Dealera
         public int VratHodnutuKaretVRuce()
         {
             Hodnota_karet = 0;
@@ -22,6 +24,7 @@ namespace blackjack_oop
                 karta_hrace.Barva = k[1];
                 int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
                 Hodnota_karet += hodnota;
+                //Pokud Ma ESO
                 if (k[0] == 'A')
                 {
                     if (Hodnota_karet > 21)
@@ -33,6 +36,7 @@ namespace blackjack_oop
             return Hodnota_karet;
         }
 
+        //Metoda Pro Vypis Karet dealera
         public void VypisKartyDealera()
         {
             Console.Write("Dealerovi Karty: ");
@@ -42,6 +46,7 @@ namespace blackjack_oop
             }
         }
 
+        //Metoda Pro Kontrolu Blackjacku
         public bool KontrolaBlackjacku()
         {
             if (Hodnota_karet == 21)
