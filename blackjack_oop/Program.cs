@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
+using System.Text;
+using static System.Formats.Asn1.AsnWriter;
 
 int moznost;
 bool menu = true;
@@ -24,7 +26,6 @@ while (menu)
         case '1':
             //Nastaveni Penez
             int penize = 1000;
-            menu = false;
             Console.Clear();
             //Zalozeni Nove Hry
             Hra hra = new Hra();
@@ -45,7 +46,6 @@ while (menu)
                     Console.WriteLine();
                     Console.WriteLine("Zmacknete ENTER Pro Vstupu Do Menu");
                     Console.ReadLine();
-                    menu = true;
                     break;
                 }
                 Console.Write("Chcete hrat dalsi kolo? (a/n) >> ");
@@ -59,8 +59,6 @@ while (menu)
                 //Pokud NE
                 else if (odpoved == 'n')
                 {
-                    
-                    menu = true;
                     break;
                 }
                 //Pokud Napise Neco Jineho
@@ -73,10 +71,40 @@ while (menu)
             break;
         //Zebricek -----------------------------------NEHOTOVE-----------------------------------
         case '2':
-            menu = false;
             Console.Clear();
-            Console.WriteLine("L");
-            Console.ReadLine();
+            try
+            {
+                string cesta = @"zebricek.csv";
+                string[] lines = System.IO.File.ReadAllLines(cesta);
+                List<string[]> hraci = new List<string[]>();
+                string[] hracove = new string[2];
+                foreach (string line in lines)
+                {
+                    hracove = new string[2];
+                    hracove[0] = line.Split(';')[0];
+                    hracove[1] = line.Split(';')[1];
+                    hraci.Add(hracove);
+                }
+                foreach (string[] player in hraci)
+                {
+                    foreach (string players in player)
+                    {
+
+                        Console.Write(players + " ");
+                    }
+                    Console.WriteLine();
+                }
+
+                Console.ReadLine();
+
+            }
+            catch
+            {
+                Console.Clear();
+                Console.WriteLine("NASTALA NEOCEKAVANA CHYBA - ZEBRICEK NEEXISTUJE");
+                Console.ReadLine();
+                
+            }
             break;
         case '3':
             Console.Clear();
@@ -96,14 +124,13 @@ while (menu)
             Console.WriteLine();
             Console.WriteLine("Hra hráče");
             Console.WriteLine("Hráč, který je na řadě má při hře následující možnosti:");
-               Console.WriteLine("Hit: Vzít od krupiéra další kartu.");
+            Console.WriteLine("Hit: Vzít od krupiéra další kartu.");
             Console.WriteLine("Double: Zdvojnásobit vsazenou částku. V takovém případě dostane od krupiéra ještě jednu kartu a hra končí. Někdy lze sázku zdvojnásobit pouze v okamžiku, kdy má hráč pouze jednu kartu.");
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("Zmacknete ENTER Pro Navrat Do Menu");
             Console.ReadLine();
-            
             break;
         //Konec
         case '4':

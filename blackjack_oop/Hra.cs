@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace blackjack_oop
 {
@@ -140,17 +141,17 @@ namespace blackjack_oop
                         break;
                     }
 
-                    char dalsi_karta = 'a';
+                    bool dalsi_karta_bool = true;
                     bool prohra_hrac_nad_21 = false;
                     //Loop Pro Dalsi Kartu
-                    while (dalsi_karta == 'a')
+                    while (dalsi_karta_bool)
                     {
                         //Dalsi Karta
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("Chcete Dalsi Kartu? (a/n) >> ");
+                        Console.Write("Chcete Dalsi Kartu? / Nebo Chcete Dat DoubleDown (a/n/d) >> ");
                         Console.ResetColor();
-                        dalsi_karta = Console.ReadKey().KeyChar;
+                        char dalsi_karta = Console.ReadKey().KeyChar;
                         //Pokud ANO
                         if (dalsi_karta == 'a')
                         {
@@ -165,7 +166,29 @@ namespace blackjack_oop
                                 prohra_hrac_nad_21 = true;
                                 break;
                             }
-                        //Pokud NE
+                            //DOUBLE DOWN
+                        } else if (dalsi_karta == 'd') {
+                            //KONTROLA PENEZ
+                            if (hrac.Penize < hrac.Sazka)
+                            {
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Nemate Dostatek Penez!");
+                                Console.ResetColor();
+                            }
+                            else
+                            {
+                                hrac.Penize = hrac.OdectiPenize();
+                                balicek.Pridani_karty_k_hraci(hrac);
+                                hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
+                                VypisHry(hrac, dealer);
+                                if (hrac.Hodnota_karet > 21)
+                                {
+                                    prohra_hrac_nad_21 = true;
+                                }
+                                break;
+                            }
+                        //POKUD NE
                         } else if (dalsi_karta == 'n')
                         {
                             break;
@@ -173,7 +196,6 @@ namespace blackjack_oop
                         //Pokud Napise Neco Jineho
                         else
                         {
-                            dalsi_karta = 'a';
                             continue;
                         }
                     }
@@ -331,6 +353,37 @@ namespace blackjack_oop
             Console.WriteLine("Hodnota Dealerovich Karet: " + dealer.Hodnota_karet);
             Console.WriteLine();
             Console.ResetColor();
+            ZapisDoZebricku(hrac);
+        }
+
+        public void ZapisDoZebricku(Hrac hrac)
+        {
+            try
+            {
+                string cesta = @"zebricek.csv";
+                var csv = new StringBuilder();
+                var newLine = string.Format("{0};{1}", hrac.Nick, hrac.Penize);
+                csv.AppendLine(newLine);          
+                File.AppendAllText(cesta, csv.ToString());
+                string[] lines = File.ReadAllLines(cesta);
+                string[] hracs = new string[2];
+                foreach (string line in lines)
+                {
+                    hracs[0] = line.Split(';')[0];
+                    hracs[1] = line.Split(';')[1];
+                    if (hracs[0].Contains(hrac.Nick))
+                    {
+                        lines = lines.Where(val => val != hrac.Nick).ToArray();
+                        Console.WriteLine(line);
+                    }
+                }
+
+            }
+            catch
+            {
+                Console.Clear();
+                Console.WriteLine("NASTALA NEOCEKAVANA CHYBA 1");
+            }
         }
     }
 }
