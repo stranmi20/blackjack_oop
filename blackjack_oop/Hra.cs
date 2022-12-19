@@ -69,6 +69,10 @@ namespace blackjack_oop
             while (round)
             {
                 //Sazka
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                hrac.Penize = penize;
+                Console.WriteLine("Pocet penez: " + hrac.Penize);
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("Vsadte sazku >> ");
@@ -87,7 +91,7 @@ namespace blackjack_oop
                 {
                     //Nastaveni Penez
                     Console.Clear();
-                    hrac.Penize = penize;
+                    
                     hrac.Sazka = sazka;
 
                     hrac.Penize = hrac.OdectiPenize();
@@ -118,39 +122,8 @@ namespace blackjack_oop
                     VypisHry(hrac, dealer);
 
                     
-                    //Kontrola Jestli Hrac I Dealer Nemaji BlackJack
-                    if (hrac.KontrolaBlackjacku() && dealer.KontrolaBlackjacku())
+                    if(KontrolaBlackjacku(hrac, dealer))
                     {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine("Remiza");
-                        Console.WriteLine("Oba Mate Blackjack!");
-                        Console.ResetColor();
-                        hrac.Penize = hrac.VratPrachy();
-                        VypisPoHre(hrac, dealer);
-                        break;
-                    }
-
-                    //Kontrola Jestli Hrac Nema BlackJack
-                    if (hrac.KontrolaBlackjacku())
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Vyhrali jste!");
-                        Console.WriteLine("Mate Blackjack!");
-                        hrac.Penize = hrac.VyhrajPrachy() + hrac.Sazka;
-                        VypisPoHre(hrac, dealer);
-                        break;
-                    }
-
-                    //Kontrola Jestli Dealer Nema Blackjack
-                    if (dealer.KontrolaBlackjacku())
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Prohrali Jste!");
-                        Console.WriteLine("Dealer Ma Blackjack");
-                        VypisPoHre(hrac, dealer);
                         break;
                     }
 
@@ -169,7 +142,6 @@ namespace blackjack_oop
                     }
                 }
             }
-           
         }
 
         //Metoda Pro Kontrola Nicku
@@ -457,6 +429,47 @@ namespace blackjack_oop
                 {
                     return false;
                 }
+            }
+            return false;
+        }
+
+        //metoda pro kontrolovani blackjacku
+        public bool KontrolaBlackjacku(Hrac hrac, Dealer dealer)
+        {
+            //Kontrola Jestli Hrac I Dealer Nemaji BlackJack
+            if (hrac.KontrolaBlackjacku() && dealer.KontrolaBlackjacku())
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Remiza");
+                Console.WriteLine("Oba Mate Blackjack!");
+                Console.ResetColor();
+                hrac.Penize = hrac.VratPrachy();
+                VypisPoHre(hrac, dealer);
+                return true;
+            }
+
+            //Kontrola Jestli Hrac Nema BlackJack
+            if (hrac.KontrolaBlackjacku())
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Vyhrali jste!");
+                Console.WriteLine("Mate Blackjack!");
+                hrac.Penize = hrac.VyhrajPrachy() + hrac.Sazka;
+                VypisPoHre(hrac, dealer);
+                return true;
+            }
+
+            //Kontrola Jestli Dealer Nema Blackjack
+            if (dealer.KontrolaBlackjacku())
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Prohrali Jste!");
+                Console.WriteLine("Dealer Ma Blackjack");
+                VypisPoHre(hrac, dealer);
+                return true;
             }
             return false;
         }

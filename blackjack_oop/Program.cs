@@ -1,5 +1,6 @@
 ﻿using blackjack_oop;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -99,8 +100,9 @@ while (menu)
                 }
 
                 data = data.OrderByDescending(x => x.Item2).ToList();
+                var prvnichpet = data.Take(5);
 
-                foreach (Tuple<string, int> dat in data)
+                foreach (Tuple<string, int> dat in prvnichpet)
                 {
                     Console.Write(dat.Item1);
                     Console.Write(" - ");
