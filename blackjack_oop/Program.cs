@@ -109,6 +109,8 @@ while (menu)
                     Console.WriteLine();
                 }
 
+                sr.Close();
+
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.Yellow;

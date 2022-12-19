@@ -126,6 +126,7 @@ namespace blackjack_oop
                         Console.WriteLine("Remiza");
                         Console.WriteLine("Oba Mate Blackjack!");
                         Console.ResetColor();
+                        hrac.Penize = hrac.VratPrachy();
                         VypisPoHre(hrac, dealer);
                         break;
                     }
@@ -137,144 +138,33 @@ namespace blackjack_oop
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Vyhrali jste!");
                         Console.WriteLine("Mate Blackjack!");
-                        hrac.Penize = hrac.VyhrajPrachy();
+                        hrac.Penize = hrac.VyhrajPrachy() + hrac.Sazka;
                         VypisPoHre(hrac, dealer);
                         break;
                     }
 
-                    bool dalsi_karta_bool = true;
-                    bool prohra_hrac_nad_21 = false;
-                    //Loop Pro Dalsi Kartu
-                    while (dalsi_karta_bool)
-                    {
-                        //Dalsi Karta
-                        Console.WriteLine();
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("Chcete Dalsi Kartu? / Nebo Chcete Dat DoubleDown (a/n/d) >> ");
-                        Console.ResetColor();
-                        char dalsi_karta = Console.ReadKey().KeyChar;
-                        //Pokud ANO
-                        if (dalsi_karta == 'a')
-                        {
-                            Console.Clear();
-                            balicek.Pridani_karty_k_hraci(hrac);
-                            hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
-                            VypisHry(hrac, dealer);
-
-                            //Kontrola Jestli Nema Hrac Hodnotu Karet Nad 21
-                            if (hrac.Hodnota_karet > 21)
-                            {
-                                prohra_hrac_nad_21 = true;
-                                break;
-                            }
-                            //DOUBLE DOWN
-                        } else if (dalsi_karta == 'd') {
-                            //KONTROLA PENEZ
-                            if (hrac.Penize < hrac.Sazka)
-                            {
-                                Console.WriteLine();
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Nemate Dostatek Penez!");
-                                Console.ResetColor();
-                            }
-                            else
-                            {
-                                hrac.Penize = hrac.OdectiPenize();
-                                balicek.Pridani_karty_k_hraci(hrac);
-                                hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
-                                VypisHry(hrac, dealer);
-                                if (hrac.Hodnota_karet > 21)
-                                {
-                                    prohra_hrac_nad_21 = true;
-                                }
-                                break;
-                            } 
-                            //POKUD NE
-                        } else if (dalsi_karta == 'n')
-                        {
-                            break;
-                        }
-                    }
-
-                    
-                    //Pokud Ma Hrac Hodnotu Karet Nad 21
-                    if (prohra_hrac_nad_21)
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Prohrali Jste!");
-                        Console.WriteLine("Hodnota Vasich Karet Je Nad 21");
-                        VypisPoHre(hrac, dealer);
-                        break;
-                    }
-
-                    //Kontrola Jestli Dealer Nema BlackJack
+                    //Kontrola Jestli Dealer Nema Blackjack
                     if (dealer.KontrolaBlackjacku())
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Prohrali jste!");
-                        Console.WriteLine("Dealer Ma Blackjack!");
+                        Console.WriteLine("Prohrali Jste!");
+                        Console.WriteLine("Dealer Ma Blackjack");
                         VypisPoHre(hrac, dealer);
                         break;
                     }
 
-                    //Loop Na To Kdyz Dealer Ma Hodnotu Karet Pod 17 
-                    while (dealer.Hodnota_karet < 17)
+                    
+                    bool dalsi_karta = true;
+                    //loop pro dalsi kartu
+                    while (dalsi_karta)
                     {
-                        balicek.Pridani_karty_k_dealerovi(dealer);
-                        dealer.Hodnota_karet = dealer.VratHodnutuKaretVRuce();
+                        dalsi_karta = DalsiKarta(hrac, dealer, balicek);
                     }
-                            
-                    //Pokud Ma Dealer Hodnotu Karet Min Nebo Presne 21 A Hrac Nema Nad 21
-                    if (dealer.Hodnota_karet <= 21 && prohra_hrac_nad_21 == false)
+                   
+                    //vyhodnoceni hry
+                    if(Rozhodovani(hrac, dealer, balicek))
                     {
-
-                        //Pokud Hrac Ma Vetsi Hodnotu Karet Nez Dealer
-                        if (hrac.Hodnota_karet > dealer.Hodnota_karet)
-                        {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine("Vyhrali Jste!");
-                            Console.WriteLine("Mate Vetsi Hodnotu Karet Nez Dealer!");                                                        
-                            hrac.Penize = hrac.VyhrajPrachy();
-                            VypisPoHre(hrac, dealer);
-                            break;
-                        }
-
-                        //Pokud Maji Stejnou Hodnotu Karet
-                        if (hrac.Hodnota_karet == dealer.Hodnota_karet)
-                        {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
-                            Console.WriteLine("Remiza!");
-                            Console.WriteLine("Mate Stejnou Hodnotu Karet Jak Dealer!");
-                            hrac.Penize = hrac.VratPrachy();
-                            VypisPoHre(hrac, dealer);
-                            break;
-                        }
-
-                        //Pokud Ma Hrac Mensi Hodnotu Karet Nez Dealer
-                        if (hrac.Hodnota_karet < dealer.Hodnota_karet)
-                        {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Prohrali jste!");
-                            Console.WriteLine("Mate Mensi Hodnotu Karet Nez Dealer!");                              
-                            VypisPoHre(hrac, dealer);
-                            break;
-                        }
-                    }
-
-                    //Pokud Ma Dealer Nad 21
-                    if(dealer.Hodnota_karet > 21)
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Vyhrali Jste!");
-                        Console.WriteLine("Dealer Ma Nad 21!");
-                        hrac.Penize = hrac.VyhrajPrachy();
-                        VypisPoHre(hrac, dealer);                     
                         break;
                     }
                 }
@@ -346,7 +236,7 @@ namespace blackjack_oop
             dealer.VypisKartyDealera();
             Console.WriteLine();        
             dealer.Hodnota_karet = dealer.VratHodnutuKaretVRuce();           
-            Console.WriteLine("Hodnota Dealerovich Karet: " + dealer.Hodnota_karet);
+            Console.WriteLine("Hodnota Dealerovych Karet: " + dealer.Hodnota_karet);
             Console.WriteLine();
             Console.ResetColor();
             ZapisDoZebricku(hrac);
@@ -354,58 +244,221 @@ namespace blackjack_oop
 
         public void ZapisDoZebricku(Hrac hrac)
         {
-            string cesta = @"zebricek.csv";
+            try
+            {
+                string cesta = @"zebricek.csv";
             
-            //Pokud csv file neexistuje vytvori ho
-            if (!File.Exists(cesta))
-            {
-                File.Create(cesta).Dispose();
-            }
-            //Otevre se soubor pro cteni
-            StreamReader sr = new StreamReader(cesta);
-
-            List<string[]> data = new List<string[]>();
-
-            //Ulozi cely text do arraye
-            string line;
-            bool nick_exist = false;
-            //cteni souboru
-            while ((line = sr.ReadLine()) != null)
-            {
-                string[] fields = line.Split(';');
-                //prepis existujiciho nicku
-                if (fields[0] == hrac.Nick) {
-                    
-                    fields[1] = hrac.Penize.ToString();
-                    nick_exist = true;
+                //Pokud csv file neexistuje vytvori ho
+                if (!File.Exists(cesta))
+                {
+                    File.Create(cesta).Dispose();
                 }
-                data.Add(fields);
+                //Otevre se soubor pro cteni
+                StreamReader sr = new StreamReader(cesta);
+
+                List<string[]> data = new List<string[]>();
+
+                //Ulozi cely text do arraye
+                string line;
+                bool nick_exist = false;
+                //cteni souboru
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] fields = line.Split(';');
+                    //prepis existujiciho nicku
+                    Int32.TryParse(fields[1], out int value);
+                    if (fields[0] == hrac.Nick && value < hrac.Penize) {
+                    
+                        fields[1] = hrac.Penize.ToString();
+                        nick_exist = true;
+                    } else if (fields[0] == hrac.Nick && value > hrac.Penize)
+                    {
+                        nick_exist = true;
+                    }
+                    data.Add(fields);
+                }
+                //pokud je novy hrac
+                if (!nick_exist)
+                {
+                    string[] pole = new string[2];
+                    pole[0] = hrac.Nick;
+                    pole[1] = hrac.Penize.ToString();
+                    data.Add(pole);
+                }
+
+                //Zavre se
+                sr.Close();
+
+                //Otvre se soubor pro psani
+                StreamWriter sw = new StreamWriter(cesta);
+
+                string[] hracs = new string[2];
+                //vypis do csv souboru
+                foreach (string[] udaj in data)
+                {
+                    string newline = string.Format("{0};{1}", udaj[0], udaj[1]);
+                    sw.WriteLine(newline);
+                }
+
+                //Zavre se
+                sw.Close();
             }
-            //pokud je novy hrac
-            if (!nick_exist)
+            catch
             {
-                string[] pole = new string[2];
-                pole[0] = hrac.Nick;
-                pole[1] = hrac.Penize.ToString();
-                data.Add(pole);
+                Console.Clear();
+                Console.WriteLine("Nastala Neocekavana Chyba 2");
+                Console.ReadLine();
             }
+           
+        }
 
-            //Zavre se
-            sr.Close();
-
-            //Otvre se soubor pro psani
-            StreamWriter sw = new StreamWriter(cesta);
-
-            string[] hracs = new string[2];
-            //vypis do csv souboru
-            foreach (string[] udaj in data)
+        //metoda pro vyhodnoceni hry
+        public bool Rozhodovani( Hrac hrac, Dealer dealer, Balicek balicek)
+        {
+            //Pokud Ma Hrac Hodnotu Karet Nad 21
+            if (hrac.Hodnota_karet > 21)
             {
-                string newline = string.Format("{0};{1}", udaj[0], udaj[1]);
-                sw.WriteLine(newline);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Prohrali Jste!");
+                Console.WriteLine("Hodnota Vasich Karet Je Nad 21");
+                VypisPoHre(hrac, dealer);
+                return true;
             }
 
-            //Zavre se
-            sw.Close();
+            //Kontrola Jestli Dealer Nema BlackJack
+            if (dealer.KontrolaBlackjacku())
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Prohrali jste!");
+                Console.WriteLine("Dealer Ma Blackjack!");
+                VypisPoHre(hrac, dealer);
+                return true;
+            }
+
+            //Loop Na To Kdyz Dealer Ma Hodnotu Karet Pod 17 
+            while (dealer.Hodnota_karet < 17)
+            {
+                balicek.Pridani_karty_k_dealerovi(dealer);
+                dealer.Hodnota_karet = dealer.VratHodnutuKaretVRuce();
+            }
+
+            //Pokud Ma Dealer Hodnotu Karet Min Nebo Presne 21 A Hrac Nema Nad 21
+            if (dealer.Hodnota_karet <= 21 && hrac.Hodnota_karet <= 21)
+            {
+
+                //Pokud Hrac Ma Vetsi Hodnotu Karet Nez Dealer
+                if (hrac.Hodnota_karet > dealer.Hodnota_karet)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Vyhrali Jste!");
+                    Console.WriteLine("Mate Vetsi Hodnotu Karet Nez Dealer!");
+                    hrac.Penize = hrac.VyhrajPrachy();
+                    VypisPoHre(hrac, dealer);
+                    return true;
+                }
+
+                //Pokud Maji Stejnou Hodnotu Karet
+                if (hrac.Hodnota_karet == dealer.Hodnota_karet)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("Remiza!");
+                    Console.WriteLine("Mate Stejnou Hodnotu Karet Jak Dealer!");
+                    hrac.Penize = hrac.VratPrachy();
+                    VypisPoHre(hrac, dealer);
+                    return true;
+                }
+
+                //Pokud Ma Hrac Mensi Hodnotu Karet Nez Dealer
+                if (hrac.Hodnota_karet < dealer.Hodnota_karet)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Prohrali jste!");
+                    Console.WriteLine("Mate Mensi Hodnotu Karet Nez Dealer!");
+                    VypisPoHre(hrac, dealer);
+                    return true;
+                }
+            }
+
+            //Pokud Ma Dealer Nad 21
+            if (dealer.Hodnota_karet > 21)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Vyhrali Jste!");
+                Console.WriteLine("Dealer Ma Nad 21!");
+                hrac.Penize = hrac.VyhrajPrachy();
+                VypisPoHre(hrac, dealer);
+                return true;
+            }
+            return false;
+        }
+
+        //metoda pro dalsi kartu
+        public bool DalsiKarta(Hrac hrac, Dealer dealer, Balicek balicek)
+        {
+            bool dalsi_karta_bool = true;
+            //Loop Pro Dalsi Kartu
+            while (dalsi_karta_bool)
+            {
+                //Dalsi Karta
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write("Chcete Dalsi Kartu? / Nebo Chcete Dat DoubleDown (a/n/d) >> ");
+                Console.ResetColor();
+                char dalsi_karta = Console.ReadKey().KeyChar;
+                //Pokud ANO
+                if (dalsi_karta == 'a')
+                {
+                    Console.Clear();
+                    balicek.Pridani_karty_k_hraci(hrac);
+                    hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
+                    VypisHry(hrac, dealer);
+                    //pokud ma hrac vetsi hodnotu karet nez 21
+                    if(hrac.Hodnota_karet > 21)
+                    {
+                        return false;
+                    }
+                    return true;
+                    //DOUBLE DOWN
+                }
+                else if (dalsi_karta == 'd')
+                {
+                    //KONTROLA PENEZ
+                    if (hrac.Penize < hrac.Sazka)
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Nemate Dostatek Penez!");
+                        Console.ResetColor();
+                        
+                    }
+                    else
+                    {
+                        hrac.Sazka = hrac.Sazka * 2;
+                        hrac.Penize = hrac.OdectiPenize();
+                        balicek.Pridani_karty_k_hraci(hrac);
+                        hrac.Hodnota_karet = hrac.VratHodnotuKaretVRuce();
+                        VypisHry(hrac, dealer);
+                        //kdyz ma vetsi hodnotu karet nez 21
+                        if (hrac.Hodnota_karet > 21)
+                        {
+                            return false;
+                        }
+                        return false;
+                    }
+                    //POKUD NE
+                }
+                else if (dalsi_karta == 'n')
+                {
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }
