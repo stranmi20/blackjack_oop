@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.SymbolStore;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -358,32 +359,47 @@ namespace blackjack_oop
 
         public void ZapisDoZebricku(Hrac hrac)
         {
-            try
-            {
-                string cesta = @"zebricek.csv";
-                var csv = new StringBuilder();
-                var newLine = string.Format("{0};{1}", hrac.Nick, hrac.Penize);
-                csv.AppendLine(newLine);          
-                File.AppendAllText(cesta, csv.ToString());
-                string[] lines = File.ReadAllLines(cesta);
-                string[] hracs = new string[2];
-                foreach (string line in lines)
-                {
-                    hracs[0] = line.Split(';')[0];
-                    hracs[1] = line.Split(';')[1];
-                    if (hracs[0].Contains(hrac.Nick))
-                    {
-                        lines = lines.Where(val => val != hrac.Nick).ToArray();
-                        Console.WriteLine(line);
-                    }
-                }
+            string cesta = @"zebricek.csv";
 
-            }
-            catch
+            //Pokud csv file neexistuje vytvori ho
+            if (!File.Exists(cesta))
             {
-                Console.Clear();
-                Console.WriteLine("NASTALA NEOCEKAVANA CHYBA 1");
+                File.Create(cesta).Dispose();
             }
+            //Otevre se soubor pro cteni
+            StreamReader sr = new StreamReader(cesta);
+
+            List<string[]> data = new List<string[]>();
+
+            //Ulozi cely text do arraye
+            string line;
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] fields = line.Split(';');
+
+                if (fields[0] == hrac.Nick) {
+                    
+                    fields[1] = hrac.Penize.ToString();
+                }
+                data.Add(fields);
+            }
+
+            //Zavre se
+            sr.Close();
+
+            //Otvre se soubor pro psani
+            StreamWriter sw = new StreamWriter(cesta);
+
+            string[] hracs = new string[2];
+
+            foreach (string[] udaj in data)
+            {
+                string newline = string.Format("{0};{1}", udaj[0], udaj[1]);
+                sw.WriteLine(newline);
+            }
+
+            //Zavre se
+            sw.Close();
         }
     }
 }
