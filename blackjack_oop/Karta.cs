@@ -22,16 +22,14 @@ namespace blackjack_oop
             if (Hodnota == '1' || Hodnota == 'J' || Hodnota == 'K' || Hodnota == 'Q')
             {
                 return 10;
-            } else if(Hodnota == 'A')
+            } 
+            if(Hodnota == 'A')
             {
                 return 11;
             }
-            else
-            {
-                //Prevedeni z char na int
-                return CharUnicodeInfo.GetDecimalDigitValue(Hodnota);
-            }
-           
+            //Prevedeni z char na int
+            return CharUnicodeInfo.GetDecimalDigitValue(Hodnota);
+
         }
     }
 }

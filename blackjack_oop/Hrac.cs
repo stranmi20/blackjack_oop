@@ -51,6 +51,7 @@ namespace blackjack_oop
         public int VratHodnotuKaretVRuce()
         {
             Hodnota_karet = 0;
+            //Pocitani karet
             foreach (string k in Karty_v_ruce)
             {
                 Karta karta_hrace = new Karta();
@@ -58,6 +59,10 @@ namespace blackjack_oop
                 karta_hrace.Barva = k[1];
                 int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
                 Hodnota_karet += hodnota;
+            }
+            //Kontrola ESA
+            foreach (string k in Karty_v_ruce)
+            {
                 //Pokud Ma ESO
                 if (k[0] == 'A')
                 {

@@ -16,6 +16,7 @@ namespace blackjack_oop
         //Metoda Pro Vraceni Hodnoty Karet Dealera
         public int VratHodnutuKaretVRuce()
         {
+            //Pocitani karet
             Hodnota_karet = 0;
             foreach (string k in Karty_v_ruce)
             {
@@ -24,6 +25,10 @@ namespace blackjack_oop
                 karta_hrace.Barva = k[1];
                 int hodnota = karta_hrace.VratHodnotu(Hodnota_karet);
                 Hodnota_karet += hodnota;
+            }
+
+            foreach (string k in Karty_v_ruce)
+            {
                 //Pokud Ma ESO
                 if (k[0] == 'A')
                 {

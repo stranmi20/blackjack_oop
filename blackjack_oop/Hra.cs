@@ -188,22 +188,17 @@ namespace blackjack_oop
                                     prohra_hrac_nad_21 = true;
                                 }
                                 break;
-                            }
-                        //POKUD NE
+                            } 
+                            //POKUD NE
                         } else if (dalsi_karta == 'n')
                         {
                             break;
-                        }
-                        //Pokud Napise Neco Jineho
-                        else
-                        {
-                            continue;
                         }
                     }
 
                     
                     //Pokud Ma Hrac Hodnotu Karet Nad 21
-                    if (prohra_hrac_nad_21 == true)
+                    if (prohra_hrac_nad_21)
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -360,7 +355,7 @@ namespace blackjack_oop
         public void ZapisDoZebricku(Hrac hrac)
         {
             string cesta = @"zebricek.csv";
-
+            
             //Pokud csv file neexistuje vytvori ho
             if (!File.Exists(cesta))
             {
@@ -373,15 +368,26 @@ namespace blackjack_oop
 
             //Ulozi cely text do arraye
             string line;
+            bool nick_exist = false;
+            //cteni souboru
             while ((line = sr.ReadLine()) != null)
             {
                 string[] fields = line.Split(';');
-
+                //prepis existujiciho nicku
                 if (fields[0] == hrac.Nick) {
                     
                     fields[1] = hrac.Penize.ToString();
+                    nick_exist = true;
                 }
                 data.Add(fields);
+            }
+            //pokud je novy hrac
+            if (!nick_exist)
+            {
+                string[] pole = new string[2];
+                pole[0] = hrac.Nick;
+                pole[1] = hrac.Penize.ToString();
+                data.Add(pole);
             }
 
             //Zavre se
@@ -391,7 +397,7 @@ namespace blackjack_oop
             StreamWriter sw = new StreamWriter(cesta);
 
             string[] hracs = new string[2];
-
+            //vypis do csv souboru
             foreach (string[] udaj in data)
             {
                 string newline = string.Format("{0};{1}", udaj[0], udaj[1]);

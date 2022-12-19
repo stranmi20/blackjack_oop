@@ -61,50 +61,67 @@ while (menu)
                 {
                     break;
                 }
-                //Pokud Napise Neco Jineho
-                else
-                {
-                    continue;
-                }
             }
             Console.ResetColor();
             break;
         //Zebricek -----------------------------------NEHOTOVE-----------------------------------
         case '2':
-            Console.Clear();
             try
             {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Zebricek 5 nejlepsich");
+                Console.WriteLine("Jmeno - Penize");
+                Console.ResetColor();
+                Console.WriteLine();
                 string cesta = @"zebricek.csv";
-                string[] lines = System.IO.File.ReadAllLines(cesta);
-                List<string[]> hraci = new List<string[]>();
-                string[] hracove = new string[2];
-                foreach (string line in lines)
-                {
-                    hracove = new string[2];
-                    hracove[0] = line.Split(';')[0];
-                    hracove[1] = line.Split(';')[1];
-                    hraci.Add(hracove);
-                }
-                foreach (string[] player in hraci)
-                {
-                    foreach (string players in player)
-                    {
 
-                        Console.Write(players + " ");
-                    }
+                //Pokud csv file neexistuje vytvori ho
+                if (!File.Exists(cesta))
+                {
+                    File.Create(cesta).Dispose();
+                }
+                //Otevre se soubor pro cteni
+                StreamReader sr = new StreamReader(cesta);
+
+                List<Tuple<string, int>> data = new List<Tuple<string, int>>();
+
+                //Ulozi cely text do arraye
+                string line;
+                //cteni souboru
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] fields = line.Split(';');
+                    Int32.TryParse(fields[1], out int value);
+                    string jmeno = fields[0];
+                    Tuple<string, int> tuple = new Tuple<string, int>(jmeno, value);
+                    data.Add(tuple);
+                }
+
+                data = data.OrderByDescending(x => x.Item2).ToList();
+
+                foreach (Tuple<string, int> dat in data)
+                {
+                    Console.Write(dat.Item1);
+                    Console.Write(" - ");
+                    Console.Write(dat.Item2);
+                    Console.WriteLine();
                     Console.WriteLine();
                 }
 
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Zmacknete ENTER pro navrat do menu");
                 Console.ReadLine();
-
+                Console.ResetColor();
             }
             catch
             {
                 Console.Clear();
-                Console.WriteLine("NASTALA NEOCEKAVANA CHYBA - ZEBRICEK NEEXISTUJE");
-                Console.ReadLine();
-                
+                Console.WriteLine("Nastala Neocekavana Chyba 1");
             }
+            
             break;
         case '3':
             Console.Clear();
@@ -129,8 +146,10 @@ while (menu)
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Zmacknete ENTER Pro Navrat Do Menu");
             Console.ReadLine();
+            Console.ResetColor();
             break;
         //Konec
         case '4':
