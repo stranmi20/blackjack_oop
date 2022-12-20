@@ -243,7 +243,7 @@ namespace blackjack_oop
                     
                         fields[1] = hrac.Penize.ToString();
                         nick_exist = true;
-                    } else if (fields[0] == hrac.Nick && value > hrac.Penize)
+                    } else if (fields[0] == hrac.Nick && value >= hrac.Penize)
                     {
                         nick_exist = true;
                     }
@@ -264,7 +264,6 @@ namespace blackjack_oop
                 //Otvre se soubor pro psani
                 StreamWriter sw = new StreamWriter(cesta);
 
-                string[] hracs = new string[2];
                 //vypis do csv souboru
                 foreach (string[] udaj in data)
                 {
@@ -472,6 +471,68 @@ namespace blackjack_oop
                 return true;
             }
             return false;
+        }
+
+        public void ZebricekProVypis()
+        {
+            try
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Zebricek 5 nejlepsich");
+                Console.WriteLine("Jmeno - Penize");
+                Console.ResetColor();
+                Console.WriteLine();
+                string cesta = @"zebricek.csv";
+
+                //Pokud csv file neexistuje vytvori ho
+                if (!File.Exists(cesta))
+                {
+                    File.Create(cesta).Dispose();
+                }
+                //Otevre se soubor pro cteni
+                StreamReader sr = new StreamReader(cesta);
+
+                List<Tuple<string, int>> data = new List<Tuple<string, int>>();
+
+                //Ulozi cely text do arraye
+                string line;
+                //cteni souboru
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] fields = line.Split(';');
+                    Int32.TryParse(fields[1], out int value);
+                    string jmeno = fields[0];
+                    Tuple<string, int> tuple = new Tuple<string, int>(jmeno, value);
+                    data.Add(tuple);
+                }
+
+                data = data.OrderByDescending(x => x.Item2).ToList();
+                var prvnichpet = data.Take(5);
+
+                foreach (Tuple<string, int> dat in prvnichpet)
+                {
+                    Console.Write(dat.Item1);
+                    Console.Write(" - ");
+                    Console.Write(dat.Item2);
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+
+                sr.Close();
+
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Zmacknete ENTER pro navrat do menu");
+                Console.ReadLine();
+                Console.ResetColor();
+            }
+            catch
+            {
+                Console.Clear();
+                Console.WriteLine("Nastala Neocekavana Chyba 1");
+            }
         }
     }
 }
